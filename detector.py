@@ -1,9 +1,13 @@
 import cv2
 import os
 
-ROOT = '/root/Desktop/pictures'
-FACES = 'root/Desktop/faces'
-TRAIN = '/root/Desktop/training'
+# ROOT = '/root/Desktop/pictures'
+# FACES = 'root/Desktop/faces'
+# TRAIN = '/root/Desktop/training'
+
+ROOT = '/pictures'
+FACES = '/faces'
+TRAIN = '/training'
 
 
 def detect(srcdir=ROOT, tgtdir=FACES, train_dir=TRAIN):

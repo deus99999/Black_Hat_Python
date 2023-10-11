@@ -5,8 +5,11 @@ import re
 import sys
 import zlib
 
-OUTDIR = '/root/Desktop/pictures'
-PCAPS = '/root/Downloads'
+# OUTDIR = '/root/Desktop/pictures'
+# PCAPS = '/root/Downloads'
+
+OUTDIR = '/pictures'
+PCAPS = '/Downloads'
 
 Response = collections.namedtuple('Response', ['header', 'payload'])
 
@@ -29,6 +32,7 @@ def get_header(payload):
                               header_raw.decode())))
     if 'Content-Type' not in header:
         return None
+    print(f'Header: {header}')
     return header
 
 
@@ -57,6 +61,7 @@ def extract_content(Response, content_name='image'):
 class Recapper:
     def __init__(self, fname):
         pcap = rdpcap(fname)
+        print(type(pcap))
         self.sessions = pcap.sessions()  #  разибиие TCP-потока на отдельные сеансы и сохранение их в виде словаря
         self.responses = list()         #  список для ответов из рсар файла
 
@@ -90,7 +95,8 @@ class Recapper:
 
 
 if __name__ == '__main__':
-    pfile = os.path.join(PCAPS, 'pcap.pcap')
+    pfile = os.path.join(PCAPS, 'data.pcap')
+    print(type(pfile))
     recapper = Recapper(pfile)
     recapper.get_responses()
     recapper.write('image')

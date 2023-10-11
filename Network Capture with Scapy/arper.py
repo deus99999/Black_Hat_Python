@@ -28,7 +28,7 @@ class Arper:
         self.gateway = gateway
         self. gatewaymac = get_mac(gateway)
         self.interface = interface
-        conf.iface - interface
+        conf.iface = interface
         conf.verb = 0
 
         print(f'Initialized {interface}:')
@@ -83,7 +83,7 @@ class Arper:
         print('-' * 30)
         print(f'Beginning the ARP poison. [CTRL-C to stop]')
         while True:
-            sys.stdout.write('.')
+            sys.stdout.write('..')
             sys.stdout.flush()
         try:
             send(poison_victim)
