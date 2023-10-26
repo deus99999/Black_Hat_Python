@@ -1,0 +1,5 @@
+.idea/
+secret.py
+mail_settings.py
+key.pub
+key.pri
