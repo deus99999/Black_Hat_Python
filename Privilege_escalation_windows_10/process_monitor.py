@@ -8,6 +8,26 @@ import win32security
 import wmi
 
 
+def get_process_privileges(pid):
+    """Мы используем ID процесса, чтобы получить его дескриптор . Дальше берем маркер процесса  и запрашиваем
+    информацию о нем , отправляя структуру win32security.TokenPrivileges. Вызов GetTokenInformation возвращает список
+    кортежей. Первым элементом кортежа является привилегия, а второй элемент говорит о том, включена она или нет.
+    Поскольку нас интересуют только включенные привилегии, мы сначала проверяем биты SE_PRIVILEGE_ENABLED
+    и SE_PRIVILEGE_ENABLED_BY_DEFAULT , а затем сохраняем удобочитаемое название соответствующей привилегии ."""
+    try:
+        hproc = win32api.OpenProcess(win32con.PROCESS_QUERY_INFORMATION, False, pid)
+        htok = win32security.OpenProcessToken(hproc, win32con.TOKEN_QUERY)
+        privs = win32security.GetTokenInformation(htok, win32security.TokenPrivileges)
+        privileges = ''
+        for priv_id, flags in privs:
+            if flags == (win32security.SE_PRIVILEGE_ENABLED | win32security.SE_PRIVILEGE_ENABLED_BY_DEFAULT):
+                privileges += f'{win32security.LookupPrivilegeName(None, priv_id)}|'
+    except Exception:
+        privileges = 'N/A'
+
+    return privileges
+
+
 def log_to_file(message):
     with open('process_monitor_log.csv', 'a') as fd:
         fd.write(f'{message}\r\n')
@@ -33,7 +53,8 @@ def monitor():
             pid = new_process.ProcessId
             proc_owner = new_process.GetOwner()
 
-            privileges = 'N/A'
+            privileges = get_process_privileges(pid)
+
             process_log_message = (
                 f'{cmdline} , {create_date} , {executable},'
                 f'{parent_pid} , {pid} , {proc_owner} , {privileges}'

